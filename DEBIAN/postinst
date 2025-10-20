@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+export PATH=$PATH:/usr/local/bin
+
+cd /usr/local/nextcloud
+./install-k3s.sh
+./install-helm.sh
+
+echo
+echo "For quick setup just launch:"
+echo "	sh /usr/local/nextcloud/setup-nextcloud.sh"
+echo "Default config:"
+echo "	~125Gi, where 120Gi is users and data"
+echo "	400m CPU, 768 Mi Memory"
+echo
+echo "Or you can mannualy setup nfs and install nextcloud:"
+echo "	sh /usr/local/nextcloud/setup-nfs.sh <NFS_CLIENT:127.0.0.1> <NFS_PATH:/srv/nfs/nextcloud>"
+echo "	sh /usr/local/nextcloud/install-nextcloud.sh"
+echo
+echo "And you may to check result: https://nextcloud.local"
+echo
+echo "Monitor cluster:"
+echo "	sh /usr/local/nextcloud/watch-cluster.sh"
+echo
