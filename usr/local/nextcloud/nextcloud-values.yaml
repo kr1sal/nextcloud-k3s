@@ -25,7 +25,8 @@ replicaCount: 1
 ingress:
   enabled: true
   # className: nginx
-  annotations: {}
+  annotations:
+    cert-manager.io/cluster-issuer: "selfsigned-cluster-issuer"
   #  nginx.ingress.kubernetes.io/proxy-body-size: 4G
   #  kubernetes.io/tls-acme: "true"
   #  cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -103,6 +104,8 @@ nextcloud:
   ## PHP Configuration files
   # Will be injected in /usr/local/etc/php/conf.d for apache image and in /usr/local/etc/php-fpm.d when nginx.enabled: true
   phpConfigs: {}
+  #  zz-memory_limit.ini: |-
+  #    memory_limit=128M
   ## Default config files that utilize environment variables:
   # see: https://github.com/nextcloud/docker/tree/master#auto-configuration-via-environment-variables
   # IMPORTANT: Will be used only if you put extra configs, otherwise default will come from nextcloud itself
@@ -623,7 +626,7 @@ service:
 ##
 persistence:
   # Nextcloud Data (/var/www/html)
-  enabled: false
+  enabled: true
   annotations: {}
   ## nextcloud data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -632,12 +635,12 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  # storageClass: "-"
+  storageClass: "nfs-client"
 
   ## A manually managed Persistent Volume and Claim
   ## Requires persistence.enabled: true
   ## If defined, PVC must be created manually before volume will be bound
-  # existingClaim:
+  # existingClaim: ""
 
   accessMode: ReadWriteOnce
   size: 100Gi
@@ -653,18 +656,18 @@ persistence:
     accessMode: ReadWriteOnce
     size: 8Gi
 
-resources: {}
+resources:
 # We usually recommend not to specify default resources and to leave this as a conscious
 # choice for the user. This also increases chances charts run on environments with little
 # resources, such as Minikube. If you do want to specify resources, uncomment the following
 # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 # resources:
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 200m
+    memory: 512Mi
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 150m
+    memory: 512Mi
 
 ## Liveness and readiness probe values
 ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
