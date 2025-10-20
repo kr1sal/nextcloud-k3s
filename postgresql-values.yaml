@@ -1,0 +1,35 @@
+# postgresql-values.yaml
+global:
+  postgresql:
+    auth:
+      postgresPassword: kjldf25
+      username: nextclouduser
+      password: fhgDD27
+      database: nextcloud
+
+primary:
+  persistence:
+    enabled: true
+    storageClass: nfs-client
+    size: 20Gi
+    accessModes:
+      - ReadWriteOnce
+
+volumePermissions:
+  enabled: true
+
+service:
+  type: ClusterIP
+
+architecture: standalone
+
+metrics:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 200m
+    memory: 512Mi
