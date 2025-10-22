@@ -19,9 +19,11 @@ helm --kubeconfig $K3S_CONFIG_FILE install nfs-provisioner nfs-subdir-external-p
 
 helm --kubeconfig $K3S_CONFIG_FILE install postgresql oci://registry-1.docker.io/bitnamicharts/postgresql -f postgresql-values.yaml -n nextcloud
 
-if ! sudo k3s kubectl get secret -n nextcloud | grep -q nextcloud-tls-secret; then
-  sudo k3s kubectl create secret tls nextcloud-tls-secret --cert=tls.crt --key=tls.key -n nextcloud
-fi
+helm --kubeconfig $K3S_CONFIG_FILE repo add jetstack https://charts.jetstack.io --force-update
+helm --kubeconfig $K3S_CONFIG_FILE install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.19.1 --set crds.enabled=true
+
+sudo k3s kubectl apply -f self-signed-issuer.yaml
+sudo k3s kubectl apply -f nextcloud-cert.yaml
 
 helm repo add nextcloud https://nextcloud.github.io/helm/
 helm --kubeconfig $K3S_CONFIG_FILE install nextcloud-server nextcloud/nextcloud -f nextcloud-values.yaml -n nextcloud

@@ -1,5 +1,5 @@
 Package: nextcloud-k3s
-Version: 1.1.1
+Version: 1.1.2
 Architecture: all
 Essential: no
 Priority: optional

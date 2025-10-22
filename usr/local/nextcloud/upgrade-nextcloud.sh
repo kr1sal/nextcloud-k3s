@@ -27,8 +27,8 @@ else
   helm --kubeconfig $K3S_CONFIG_FILE upgrade postgresql oci://registry-1.docker.io/bitnamicharts/postgresql -f postgresql-values.yaml -n nextcloud
 fi
 
-if ! sudo k3s kubectl get secret -n nextcloud | grep -q nextcloud-tls-secret; then
-  sudo k3s kubectl create secret tls nextcloud-tls-secret --cert=tls.crt --key=tls.key -n nextcloud
+if ! helm --kubeconfig $K3S_CONFIG_FILE list -n nextcloud | grep -q cert-manager; then
+  helm --kubeconfig $K3S_CONFIG_FILE upgrade nextcloud-server nextcloud/nextcloud -f nextcloud-values.yaml -n nextcloud
 fi
 
 helm repo add nextcloud https://nextcloud.github.io/helm/

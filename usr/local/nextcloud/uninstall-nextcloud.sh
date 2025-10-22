@@ -7,6 +7,10 @@ if helm --kubeconfig $K3S_CONFIG_FILE list -n nextcloud | grep -q nextcloud-serv
   helm --kubeconfig $K3S_CONFIG_FILE uninstall nextcloud-server -n nextcloud
 fi
 
+if helm --kubeconfig $K3S_CONFIG_FILE list -n cert-manager | grep -q "cert-manager"; then
+  helm delete cert-manager --namespace cert-manager
+fi
+
 if helm --kubeconfig $K3S_CONFIG_FILE list -n nextcloud | grep -q postgresql; then
   helm --kubeconfig $K3S_CONFIG_FILE uninstall postgresql -n nextcloud
 fi
