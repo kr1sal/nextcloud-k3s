@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-NFS_CLIENT=${1:-127.0.0.1}
+NFS_CLIENT=${1:-*}
 NFS_PATH=${2:-/srv/nfs/nextcloud}
 
 mkdir -p /srv/nfs/nextcloud
@@ -19,6 +19,9 @@ if ! grep -qF "$EXPORT_LINE" /etc/exports; then
 fi
 
 sudo exportfs -a
+if systemctl is-enabled nfs-kernel-server | grep enabled; then
+  sudo systemctl restart nfs-kernel-server
+fi
 sudo systemctl enable --now nfs-kernel-server
 showmount -e "$NFS_CLIENT"
 
