@@ -36,3 +36,4 @@ fi
 echo "You need manually delete PV from cluster"
 echo "  sudo k3s kubectl get pv"
 echo "  sudo k3s kubectl delete pv <PV_NAME>"
+echo "  sudo rm -rf /srv/nfs/nextcloud/*"

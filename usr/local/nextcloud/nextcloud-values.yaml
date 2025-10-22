@@ -18,17 +18,18 @@ replicaCount: 1
 ingress:
   enabled: true
   className: nginx
-  #annotations:
-  #  cert-manager.io/cluster-issuer: "selfsigned-cluster-issuer"
+  annotations:
+    cert-manager.io/cluster-issuer: "selfsigned-issuer"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   hosts:
     - host: nextcloud.local
       paths:
         - path: /
           pathType: Prefix
-  #tls:
-  #  - secretName: nextcloud-tls-secret
-  #    hosts:
-  #      - nextcloud.local
+  tls:
+    - secretName: nextcloud-tls-secret
+      hosts:
+        - nextcloud.local
   labels: {}
   path: /
   pathType: Prefix
@@ -57,10 +58,10 @@ nextcloud:
   datadir: /var/www/html/data
   persistence:
     subPath:
-  trustedDomains: []
-  #  - nextcloud.local
-  #  - localhost
-  #  - 10.129.0.17
+  trustedDomains:
+    - nextcloud.local
+    - localhost
+    - 10.129.0.17
   phpConfigs: {}
   #  zz-memory_limit.ini: |-
   #    memory_limit=128M
@@ -91,6 +92,56 @@ nextcloud:
     # rollingUpdate:
     #   maxSurge: 1
     #   maxUnavailable: 0
+    
+  extraEnv:
+  #  - name: SOME_SECRET_ENV
+  #    valueFrom:
+  #      secretKeyRef:
+  #        name: nextcloud
+  #        key: secret_key
+
+  extraInitContainers: []
+  #  - name: do-something
+  #    image: busybox
+  #    command: ['do', 'something']
+
+  extraSidecarContainers: []
+  #  - name: nextcloud-logger
+  #    image: busybox
+  #    command: [/bin/sh, -c, 'while ! test -f "/run/nextcloud/data/nextcloud.log"; do sleep 1; done; tail -n+1 -f /run/nextcloud/data/nextcloud.log']
+  #    volumeMounts:
+  #    - name: nextcloud-data
+  #      mountPath: /run/nextcloud/data
+
+  extraVolumes:
+  #  - name: nfs
+  #    nfs:
+  #      server: "10.0.0.1"
+  #      path: "/nextcloud_data"
+  #      readOnly: false
+  extraVolumeMounts:
+  #  - name: nfs
+  #    mountPath: "/legacy_data"
+
+  securityContext: {}
+  #   runAsUser: 33
+  #   runAsGroup: 33
+  #   runAsNonRoot: true
+  #   readOnlyRootFilesystem: false
+
+  podSecurityContext: {}
+  #   runAsUser: 33
+  #   runAsGroup: 33
+  #   runAsNonRoot: true
+  #   readOnlyRootFilesystem: false
+
+  mariaDbInitContainer:
+    resources: {}
+    securityContext: {}
+
+  postgreSqlInitContainer:
+    resources: {}
+    securityContext: {}
 
 nginx:
   enabled: true
@@ -124,8 +175,8 @@ nginx:
 
   resources: {}
 
-  securityContext:
-    runAsUser: 33
+  securityContext: {}
+  
   extraEnv: []
 
 internalDatabase:
@@ -252,21 +303,30 @@ resources:
     memory: 512Mi
 
 livenessProbe:
-  enabled: false
+  enabled: true
+  httpGet:
+    path: /status.php
+    port: 8080
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 3
   successThreshold: 1
 readinessProbe:
-  enabled: false
+  enabled: true
+  httpGet:
+    path: /status.php
+    port: 8080
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 3
   successThreshold: 1
 startupProbe:
-  enabled: false
+  enabled: true
+  httpGet:
+    path: /status.php
+    port: 8080
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
@@ -323,18 +383,12 @@ imaginary:
 
   readinessProbe:
     enabled: true
-    httpGet:
-      path: /status.php
-      port: 8080
     failureThreshold: 3
     successThreshold: 1
     periodSeconds: 10
     timeoutSeconds: 1
   livenessProbe:
     enabled: true
-    httpGet:
-      path: /status.php
-      port: 8080
     failureThreshold: 3
     successThreshold: 1
     periodSeconds: 10
