@@ -33,3 +33,8 @@ resources:
   limits:
     cpu: 200m
     memory: 512Mi
+    
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001

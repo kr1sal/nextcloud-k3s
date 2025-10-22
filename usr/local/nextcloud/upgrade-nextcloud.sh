@@ -28,7 +28,9 @@ else
 fi
 
 if ! helm --kubeconfig $K3S_CONFIG_FILE list -n nextcloud | grep -q cert-manager; then
-  helm --kubeconfig $K3S_CONFIG_FILE upgrade nextcloud-server nextcloud/nextcloud -f nextcloud-values.yaml -n nextcloud
+  helm --kubeconfig $K3S_CONFIG_FILE install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.19.1 --set crds.enabled=true
+else
+  helm --kubeconfig $K3S_CONFIG_FILE upgrade cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.19.1 --set crds.enabled=true
 fi
 
 helm repo add nextcloud https://nextcloud.github.io/helm/

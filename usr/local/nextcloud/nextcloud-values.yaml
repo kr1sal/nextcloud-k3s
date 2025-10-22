@@ -18,17 +18,17 @@ replicaCount: 1
 ingress:
   enabled: true
   className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: "selfsigned-cluster-issuer"
+  #annotations:
+  #  cert-manager.io/cluster-issuer: "selfsigned-cluster-issuer"
   hosts:
     - host: nextcloud.local
       paths:
         - path: /
           pathType: Prefix
-  tls:
-    - secretName: nextcloud-tls-secret
-      hosts:
-        - nextcloud.local
+  #tls:
+  #  - secretName: nextcloud-tls-secret
+  #    hosts:
+  #      - nextcloud.local
   labels: {}
   path: /
   pathType: Prefix
@@ -78,8 +78,6 @@ nextcloud:
     upgrade-disable-web.config.php: true
     imaginary.config.php: false
 
-  configs: {}
-
   hooks:
     pre-installation:
     post-installation:
@@ -93,13 +91,6 @@ nextcloud:
     # rollingUpdate:
     #   maxSurge: 1
     #   maxUnavailable: 0
-
-  extraEnv:
-  extraInitContainers: []
-  extraVolumes:
-  extraVolumeMounts:
-  securityContext: {}
-  podSecurityContext: {}
 
 nginx:
   enabled: true
@@ -133,7 +124,8 @@ nginx:
 
   resources: {}
 
-  securityContext: {}
+  securityContext:
+    runAsUser: 33
   extraEnv: []
 
 internalDatabase:
@@ -260,14 +252,14 @@ resources:
     memory: 512Mi
 
 livenessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 3
   successThreshold: 1
 readinessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
@@ -331,12 +323,18 @@ imaginary:
 
   readinessProbe:
     enabled: true
+    httpGet:
+      path: /status.php
+      port: 8080
     failureThreshold: 3
     successThreshold: 1
     periodSeconds: 10
     timeoutSeconds: 1
   livenessProbe:
     enabled: true
+    httpGet:
+      path: /status.php
+      port: 8080
     failureThreshold: 3
     successThreshold: 1
     periodSeconds: 10

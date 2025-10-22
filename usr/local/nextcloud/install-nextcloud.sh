@@ -19,7 +19,7 @@ helm --kubeconfig $K3S_CONFIG_FILE install nfs-provisioner nfs-subdir-external-p
 
 helm --kubeconfig $K3S_CONFIG_FILE install postgresql oci://registry-1.docker.io/bitnamicharts/postgresql -f postgresql-values.yaml -n nextcloud
 
-helm --kubeconfig $K3S_CONFIG_FILE repo add jetstack https://charts.jetstack.io --force-update
+helm --kubeconfig $K3S_CONFIG_FILE repo add jetstack https://charts.jetstack.io
 helm --kubeconfig $K3S_CONFIG_FILE install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.19.1 --set crds.enabled=true
 
 sudo k3s kubectl apply -f self-signed-issuer.yaml
