@@ -27,6 +27,7 @@ else
   helm --kubeconfig $K3S_CONFIG_FILE upgrade postgresql oci://registry-1.docker.io/bitnamicharts/postgresql -f postgresql-values.yaml -n nextcloud
 fi
 
+helm --kubeconfig $K3S_CONFIG_FILE repo add jetstack https://charts.jetstack.io
 if ! helm --kubeconfig $K3S_CONFIG_FILE list -n cert-manager | grep -q cert-manager; then
   helm --kubeconfig $K3S_CONFIG_FILE install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.19.1 --set crds.enabled=true
 else

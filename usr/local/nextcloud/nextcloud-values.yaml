@@ -17,10 +17,10 @@ replicaCount: 1
 
 ingress:
   enabled: true
-  className: nginx
+  className: traefik
   annotations:
     cert-manager.io/cluster-issuer: "selfsigned-issuer"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+#    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   hosts:
     - host: nextcloud.local
       paths:
@@ -304,9 +304,9 @@ resources:
 
 livenessProbe:
   enabled: true
-  httpGet:
-    path: /status.php
-    port: 8080
+#  httpGet:
+#    path: /status.php
+#    port: 8080
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
@@ -314,9 +314,9 @@ livenessProbe:
   successThreshold: 1
 readinessProbe:
   enabled: true
-  httpGet:
-    path: /status.php
-    port: 8080
+#  httpGet:
+#    path: /status.php
+#    port: 8080
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
@@ -324,9 +324,9 @@ readinessProbe:
   successThreshold: 1
 startupProbe:
   enabled: true
-  httpGet:
-    path: /status.php
-    port: 8080
+#  httpGet:
+#    path: /status.php
+#    port: 8080
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 5
