@@ -30,7 +30,8 @@ ingress:
     - secretName: nextcloud-tls-secret
       hosts:
         - nextcloud.local
-  labels: {}
+  labels:
+    app: "nextcloud"
   path: /
   pathType: Prefix
 
