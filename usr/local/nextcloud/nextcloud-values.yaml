@@ -20,7 +20,7 @@ ingress:
   className: traefik
   annotations:
     cert-manager.io/cluster-issuer: "selfsigned-issuer"
-#    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
   hosts:
     - host: nextcloud.local
       paths:
@@ -61,7 +61,6 @@ nextcloud:
     subPath:
   trustedDomains:
     - nextcloud.local
-    - localhost
     - 10.129.0.17
   phpConfigs: {}
   #  zz-memory_limit.ini: |-
@@ -221,7 +220,7 @@ externalRedis:
 
 
 redis:
-  enabled: false
+  enabled: true
   image:
     repository: bitnamilegacy/redis
   auth:
@@ -230,7 +229,7 @@ redis:
     existingSecret: ""
     existingSecretPasswordKey: ""
   global:
-    storageClass: ""
+    storageClass: "nfs-client"
   master:
     persistence:
       enabled: true
