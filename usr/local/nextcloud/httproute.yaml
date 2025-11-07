@@ -15,6 +15,6 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: nextcloud
+        - name: nextcloud-server
           namespace: nextcloud
           port: 80
