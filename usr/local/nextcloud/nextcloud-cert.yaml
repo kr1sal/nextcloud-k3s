@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: nextcloud-tls-secret
   dnsNames:
-    - nextcloud.local
+    - nextcloud.docker.localhost
   issuerRef:
     name: selfsigned-issuer
     kind: ClusterIssuer

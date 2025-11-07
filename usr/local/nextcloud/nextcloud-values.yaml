@@ -2,9 +2,6 @@ image:
   repository: nextcloud
   flavor: fpm
   tag:
-  pullPolicy: IfNotPresent
-  # pullSecrets:
-  #   - myRegistrKeySecretName
 
 nameOverride: ""
 fullnameOverride: ""
@@ -16,35 +13,14 @@ deploymentLabels: {}
 replicaCount: 1
 
 ingress:
-  enabled: true
-  className: traefik
-  annotations:
-    cert-manager.io/cluster-issuer: "selfsigned-issuer"
-    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
-  hosts:
-    - host: nextcloud.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: nextcloud-tls-secret
-      hosts:
-        - nextcloud.local
-  labels:
-    app: "nextcloud"
-  path: /
-  pathType: Prefix
-
-lifecycle: {}
-
-phpClientHttpsFix:
-  enabled: true
-  protocol: https
+  enabled: false
 
 nextcloud:
-  host: nextcloud.local
+  host: nextcloud.docker.localhost
   username: admin
   password: admin
+  trustedDomains:
+  - nextcloud.docker.localhost
   existingSecret:
     enabled: false
     # secretName: nameofsecret
@@ -54,182 +30,42 @@ nextcloud:
     smtpUsernameKey: smtp-username
     smtpPasswordKey: smtp-password
     smtpHostKey: smtp-host
-  update: 0
   containerPort: 80
   datadir: /var/www/html/data
-  persistence:
-    subPath:
-  trustedDomains:
-    - nextcloud.local
-    - 10.129.0.17
-  phpConfigs: {}
-  #  zz-memory_limit.ini: |-
-  #    memory_limit=128M
-  defaultConfigs:
-    .htaccess: true
-    apache-pretty-urls.config.php: true
-    apcu.config.php: true
-    apps.config.php: true
-    autoconfig.php: true
-    redis.config.php: true
-    reverse-proxy.config.php: true
-    s3.config.php: true
-    smtp.config.php: true
-    swift.config.php: true
-    upgrade-disable-web.config.php: true
-    imaginary.config.php: false
-
-  hooks:
-    pre-installation:
-    post-installation:
-    pre-upgrade:
-    post-upgrade:
-    before-starting:
-
-  strategy:
-    type: Recreate
-    # type: RollingUpdate
-    # rollingUpdate:
-    #   maxSurge: 1
-    #   maxUnavailable: 0
-    
-  extraEnv:
-  #  - name: SOME_SECRET_ENV
-  #    valueFrom:
-  #      secretKeyRef:
-  #        name: nextcloud
-  #        key: secret_key
-
-  extraInitContainers: []
-  #  - name: do-something
-  #    image: busybox
-  #    command: ['do', 'something']
-
-  extraSidecarContainers: []
-  #  - name: nextcloud-logger
-  #    image: busybox
-  #    command: [/bin/sh, -c, 'while ! test -f "/run/nextcloud/data/nextcloud.log"; do sleep 1; done; tail -n+1 -f /run/nextcloud/data/nextcloud.log']
-  #    volumeMounts:
-  #    - name: nextcloud-data
-  #      mountPath: /run/nextcloud/data
-
-  extraVolumes:
-  #  - name: nfs
-  #    nfs:
-  #      server: "10.0.0.1"
-  #      path: "/nextcloud_data"
-  #      readOnly: false
-  extraVolumeMounts:
-  #  - name: nfs
-  #    mountPath: "/legacy_data"
-
-  securityContext: {}
-  #   runAsUser: 33
-  #   runAsGroup: 33
-  #   runAsNonRoot: true
-  #   readOnlyRootFilesystem: false
-
-  podSecurityContext: {}
-  #   runAsUser: 33
-  #   runAsGroup: 33
-  #   runAsNonRoot: true
-  #   readOnlyRootFilesystem: false
-
-  mariaDbInitContainer:
-    resources: {}
-    securityContext: {}
-
-  postgreSqlInitContainer:
-    resources: {}
-    securityContext: {}
 
 nginx:
   enabled: true
-
-  image:
-    repository: nginx
-    tag: alpine
-    pullPolicy: IfNotPresent
-
   containerPort: 80
-  ipFamilies:
-    - IPv4
-  config:
-    default: true
-    headers:
-      "Strict-Transport-Security": ""
-      "Referrer-Policy": "no-referrer"
-      "X-Content-Type-Options": "nosniff"
-      "X-Frame-Options": "SAMEORIGIN"
-      "X-Permitted-Cross-Domain-Policies": "none"
-      "X-Robots-Tag": "noindex, nofollow"
-      "X-XSS-Protection": "1; mode=block"
-
-    serverBlockCustom: |
-      client_max_body_size 10G;
-      client_body_timeout 300s;
-      fastcgi_buffers 64 4K;
-      fastcgi_read_timeout 3600s;
-
-    custom:
-
-  resources: {}
-
-  securityContext: {}
-  
-  extraEnv: []
 
 internalDatabase:
   enabled: false
-  name: nextcloud
+
+postgresql:
+  enabled: false
 
 externalDatabase:
   enabled: true
-
   type: postgresql
-
   host: "postgresql.nextcloud.svc.cluster.local"
-
   user: nextclouduser
-
   password: "fhgDD27"
-
   database: nextcloud
-
   existingSecret:
     enabled: false
     usernameKey: db-username
     passwordKey: db-password
 
-global:
-  security:
-    allowInsecureImages: true
-
 externalRedis:
   enabled: false
-
-  host: ""
-
-  port: "6379"
-
-  password: ""
-
-  existingSecret:
-    enabled: false
-    passwordKey: redis-password
-
 
 redis:
   enabled: true
   image:
     repository: bitnamilegacy/redis
   auth:
-    enabled: true
-    password: "changeme"
-    existingSecret: ""
-    existingSecretPasswordKey: ""
+    enabled: false
   global:
-    storageClass: "nfs-client"
+    storageClass: "nextcloud"
   master:
     persistence:
       enabled: true
@@ -239,17 +75,13 @@ redis:
 
 cronjob:
   enabled: true
-
   type: sidecar
-
   sidecar:
     resources: {}
-
     lifecycle: {}
     securityContext: {}
     command:
       - /cron.sh
-
   cronjob:
     schedule: "*/5 * * * *"
     successfulJobsHistoryLimit: 3
@@ -270,29 +102,22 @@ cronjob:
 
 service:
   type: ClusterIP
-  port: 8080
-  loadBalancerIP: ""
-  nodePort:
-  annotations: {}
-  sessionAffinity: ""
-  sessionAffinityConfig: {}
+  port: 80
+  targetPort: 80
 
 persistence:
   enabled: true
-  annotations: {}
-  storageClass: "nfs-client"
-
-  accessMode: ReadWriteOnce
+  storageClass: "nextcloud"
+  accessMode: ReadWriteMany
   size: 100Gi
-
   nextcloudData:
     enabled: false
-    subPath:
-    annotations: {}
-    # storageClass: "-"
-    # existingClaim:
-    accessMode: ReadWriteOnce
-    size: 8Gi
+
+hpa:
+  enabled: false
+  cputhreshold: 60
+  minPods: 1
+  maxPods: 10
 
 resources:
   limits:
@@ -301,182 +126,3 @@ resources:
   requests:
     cpu: 150m
     memory: 512Mi
-
-livenessProbe:
-  enabled: true
-#  httpGet:
-#    path: /status.php
-#    port: 8080
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-  successThreshold: 1
-readinessProbe:
-  enabled: true
-#  httpGet:
-#    path: /status.php
-#    port: 8080
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-  successThreshold: 1
-startupProbe:
-  enabled: true
-#  httpGet:
-#    path: /status.php
-#    port: 8080
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-  successThreshold: 1
-
-hpa:
-  enabled: false
-  cputhreshold: 60
-  minPods: 1
-  maxPods: 10
-
-nodeSelector: {}
-
-tolerations: []
-
-topologySpreadConstraints: []
-
-affinity: {}
-
-dnsConfig: {}
-
-imaginary:
-  enabled: false
-  replicaCount: 1
-
-  image:
-    registry: docker.io
-    repository: h2non/imaginary
-    tag: 1.2.4
-    pullPolicy: IfNotPresent
-    pullSecrets: []
-
-  podAnnotations: {}
-  podLabels: {}
-  nodeSelector: {}
-  tolerations: []
-  topologySpreadConstraints: []
-
-  resources: {}
-
-  securityContext:
-    runAsUser: 1000
-    runAsNonRoot: true
-    # allowPrivilegeEscalation: false
-    # capabilities:
-    #   drop:
-    #     - ALL
-
-  podSecurityContext: {}
-  # runAsNonRoot: true
-  # seccompProfile:
-  #   type: RuntimeDefault
-
-  readinessProbe:
-    enabled: true
-    failureThreshold: 3
-    successThreshold: 1
-    periodSeconds: 10
-    timeoutSeconds: 1
-  livenessProbe:
-    enabled: true
-    failureThreshold: 3
-    successThreshold: 1
-    periodSeconds: 10
-    timeoutSeconds: 1
-
-  service:
-    type: ClusterIP
-    loadBalancerIP:
-    nodePort:
-    annotations: {}
-    labels: {}
-
-metrics:
-  enabled: false
-
-  replicaCount: 1
-  server: ""
-  https: false
-  token: ""
-  timeout: 5s
-  tlsSkipVerify: false
-  info:
-    apps: false
-    update: false
-
-  image:
-    repository: xperimental/nextcloud-exporter
-    tag: 0.8.0
-    pullPolicy: IfNotPresent
-    # pullSecrets:
-    #   - myRegistrKeySecretName
-
-  resources: {}
-
-  podAnnotations: {}
-
-  podLabels: {}
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
-
-  service:
-    type: ClusterIP
-    loadBalancerIP:
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "9205"
-    labels: {}
-
-  securityContext:
-    runAsUser: 1000
-    runAsNonRoot: true
-
-  podSecurityContext: {}
-
-  serviceMonitor:
-    enabled: false
-
-    namespace: ""
-
-    namespaceSelector:
-
-    jobLabel: ""
-
-    interval: 30s
-
-    scrapeTimeout: ""
-
-    labels: {}
-
-  rules:
-    enabled: false
-    labels: {}
-    defaults:
-      enabled: true
-      labels: {}
-      filter: ""
-    additionalRules: []
-
-rbac:
-  enabled: false
-  serviceaccount:
-    create: true
-    name: nextcloud-serviceaccount
-    annotations: {}
-
-securityContext: {}
-

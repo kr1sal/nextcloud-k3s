@@ -1,4 +1,3 @@
-# postgresql-values.yaml
 global:
   postgresql:
     auth:
@@ -10,13 +9,10 @@ global:
 primary:
   persistence:
     enabled: true
-    storageClass: nfs-client
+    storageClass: nextcloud
     size: 20Gi
     accessModes:
-      - ReadWriteOnce
-
-volumePermissions:
-  enabled: true
+      - ReadWriteMany
 
 service:
   type: ClusterIP
