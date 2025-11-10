@@ -8,8 +8,8 @@ sudo cp -f /etc/rancher/k3s/k3s.yaml $K3S_CONFIG_FILE
 sudo chown $(id -u):$(id -g) $K3S_CONFIG_FILE
 sudo chmod +r $K3S_CONFIG_FILE
 
-if ! sudo ls /etc/hosts | grep -q nextcloud.docker.localhost; then
-  echo "127.0.0.1	nextcloud.docker.localhost" | sudo tee -a /etc/hosts
+if ! sudo ls /etc/hosts | grep -q nextcloud.build-hub.local; then
+  echo "127.0.0.1	nextcloud.build-hub.local" | sudo tee -a /etc/hosts
 fi
 
 sudo k3s kubectl get namespace nextcloud >/dev/null 2>&1 || sudo k3s kubectl create namespace nextcloud

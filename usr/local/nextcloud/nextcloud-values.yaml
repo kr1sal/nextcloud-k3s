@@ -15,12 +15,17 @@ replicaCount: 1
 ingress:
   enabled: false
 
+phpClientHttpsFix:
+  enabled: true
+  protocol: https
+
 nextcloud:
-  host: nextcloud.docker.localhost
+  host: nextcloud.build-hub.local
   username: admin
   password: admin
   trustedDomains:
-  - nextcloud.docker.localhost
+  - nextcloud.build-hub.local
+  - 10.10.10.217
   existingSecret:
     enabled: false
     # secretName: nameofsecret

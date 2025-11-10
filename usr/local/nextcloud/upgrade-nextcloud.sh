@@ -50,15 +50,3 @@ else
 fi
 
 sudo k3s kubectl apply -f httproute.yaml
-
-echo "Waiting cluster ready..."
-while true
-do
-  if ( sudo k3s kubectl get pods -n nextcloud | grep -q "nextcloud-server.*3/3.*Running" && sudo k3s kubectl get pods -n nextcloud | grep -q "nfs-provisioner-.*1/1.*Running" && sudo k3s kubectl get pods -n nextcloud | grep -q "postgresql.*1/1.*Running" ); then
-    echo "Cluster is ready for work!"
-    break
-  else
-    sleep 10
-  fi
-done
-

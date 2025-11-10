@@ -20,7 +20,7 @@ echo "  cd /usr/local/nextcloud"
 echo "	sh /usr/local/nextcloud/setup-nfs.sh <NFS_CLIENT:127.0.0.1> <NFS_PATH:/srv/nfs/nextcloud>"
 echo "	sh /usr/local/nextcloud/install-nextcloud.sh"
 echo
-echo "And you may to check result: https://nextcloud.docker.localhost"
+echo "And you may to check result: https://nextcloud.build-hub.local"
 echo
 echo "Monitor cluster:"
 echo "  sh /usr/local/nextcloud/install-viddy.sh"
