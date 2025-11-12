@@ -23,9 +23,6 @@ nextcloud:
   host: nextcloud.build-hub.local
   username: admin
   password: admin
-  trustedDomains:
-  - nextcloud.build-hub.local
-  - 10.10.10.217
   existingSecret:
     enabled: false
     # secretName: nameofsecret
@@ -37,6 +34,20 @@ nextcloud:
     smtpHostKey: smtp-host
   containerPort: 80
   datadir: /var/www/html/data
+  configs:
+    dynamic-trusted-domains.config.php: |
+      <?php
+      $hostname = $_SERVER['HTTP_HOST'];
+      $CONFIG = array (
+        'trusted_domains' => 
+        array (
+          0 => 'localhost',
+          1 => 'nextcloud.build-hub.local',
+          3 => $hostname,
+        ),
+        'forwarded_for_headers' => ['HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED'],
+      );
+
 
 nginx:
   enabled: true
