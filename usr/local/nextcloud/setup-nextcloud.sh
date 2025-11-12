@@ -8,4 +8,3 @@ NFS_PATH=${2:-/srv/nfs/nextcloud}
 ./install-k3s.sh
 ./install-helm.sh
 ./upgrade-nextcloud.sh
-./launch-nextcloud.sh

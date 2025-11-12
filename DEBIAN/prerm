@@ -1,20 +1,7 @@
 #!/bin/bash
-
 set -e
 
 export PATH=$PATH:/usr/local/bin
-
-if systemctl is-enabled nextcloud-port-forward.service | grep enabled; then
-  sudo systemctl disable --now nextcloud-port-forward.service
-fi
-
-if [ -f /usr/local/bin/nextcloud-port-forward.sh ]; then
-  sudo rm /usr/local/bin/nextcloud-port-forward.sh
-fi
-
-if [ -f /etc/systemd/system/nextcloud-port-forward.service ]; then
-  sudo rm /etc/systemd/system/nextcloud-port-forward.service
-fi
 
 if [ -f ~/.kube/config-nextcloud ]; then
   sudo rm ~/.kube/config-nextcloud
