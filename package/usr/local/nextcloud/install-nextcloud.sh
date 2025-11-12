@@ -1,9 +1,8 @@
 #!/bin/bash
 set -e
 
-K3S_CONFIG_FILE=~/.kube/config-nextcloud
+K3S_CONFIG_FILE=/usr/local/nextcloud/config-nextcloud
 
-mkdir -p ~/.kube
 sudo cp -f /etc/rancher/k3s/k3s.yaml $K3S_CONFIG_FILE
 sudo chown $(id -u):$(id -g) $K3S_CONFIG_FILE
 sudo chmod +r $K3S_CONFIG_FILE

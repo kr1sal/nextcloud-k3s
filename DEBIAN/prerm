@@ -1,8 +1,0 @@
-#!/bin/bash
-set -e
-
-export PATH=$PATH:/usr/local/bin
-
-if [ -f ~/.kube/config-nextcloud ]; then
-  sudo rm ~/.kube/config-nextcloud
-fi

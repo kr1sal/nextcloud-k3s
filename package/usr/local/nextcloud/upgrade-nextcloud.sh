@@ -1,9 +1,8 @@
 #!/bin/bash
 set -e
 
-K3S_CONFIG_FILE=~/.kube/config-nextcloud
+K3S_CONFIG_FILE=/usr/local/nextcloud/config-nextcloud
 
-mkdir -p ~/.kube
 sudo cp -f /etc/rancher/k3s/k3s.yaml $K3S_CONFIG_FILE
 sudo chown $(id -u):$(id -g) $K3S_CONFIG_FILE
 sudo chmod +r $K3S_CONFIG_FILE
@@ -40,3 +39,14 @@ else
 fi
 
 sudo k3s kubectl apply -f httproute.yaml
+
+echo "Waiting NextCloud ready..."
+while true
+do
+  if ( sudo k3s kubectl get pods -l app.kubernetes.io/component=app -n nextcloud | grep -q "3/3.*Running" ); then
+    echo "NextCloud is ready for work!"
+    break
+  else
+    sleep 10
+  fi
+done

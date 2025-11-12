@@ -1,13 +1,11 @@
 #!/bin/bash
 set -e
 
-K3S_CONFIG_FILE=~/.kube/config-nextcloud
+K3S_CONFIG_FILE=/usr/local/nextcloud/config-nextcloud
 
 if helm --kubeconfig $K3S_CONFIG_FILE list -n nextcloud | grep -q nextcloud-server; then
   helm --kubeconfig $K3S_CONFIG_FILE uninstall nextcloud-server -n nextcloud
 fi
-
-kubectl
 
 if helm --kubeconfig $K3S_CONFIG_FILE list -n cert-manager | grep -q cert-manager; then
   helm --kubeconfig $K3S_CONFIG_FILE uninstall cert-manager -n cert-manager

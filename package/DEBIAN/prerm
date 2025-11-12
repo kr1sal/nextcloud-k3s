@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+export PATH=$PATH:/usr/local/bin
+
+if [ -f /usr/local/nextcloud/config-nextcloud ]; then
+  sudo rm /usr/local/nextcloud/config-nextcloud
+fi
