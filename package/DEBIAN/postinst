@@ -4,18 +4,10 @@ set -e
 export PATH=$PATH:/usr/local/bin
 
 echo
-echo "You have installed the scripts and configuration for deploying NextCloud."
-echo "To make everything work correctly, go to the directory:"
-echo "  cd /usr/local/nextcloud"
-echo
 echo "For quick setup just launch:"
-echo "	bash /usr/local/nextcloud/setup-nextcloud.sh"
+echo "	bash /usr/local/nextcloud/deploy.sh"
 echo
-echo "Or you can mannualy setup nfs and install nextcloud:"
-echo "	bash /usr/local/nextcloud/setup-nfs.sh <NFS_CLIENT:127.0.0.1> <NFS_PATH:/srv/nfs/nextcloud>"
-echo "	bash /usr/local/nextcloud/install-nextcloud.sh"
 echo
-echo "Monitor cluster:"
-echo "  bash /usr/local/nextcloud/install-viddy.sh"
-echo "	bash /usr/local/nextcloud/watch-cluster.sh"
+echo "For remove setup launch:"
+echo "	bash /usr/local/nextcloud/remove.sh"
 echo

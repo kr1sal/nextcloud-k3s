@@ -1,0 +1,7 @@
+Package: nextcloud-k3s
+Version: 1.2.2
+Architecture: all
+Essential: no
+Priority: optional
+Maintainer: kr1sal
+Description: Nextcloud Deploy on k3s cluster
