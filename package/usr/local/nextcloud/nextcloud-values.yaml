@@ -37,7 +37,7 @@ nextcloud:
   configs:
     dynamic-trusted-domains.config.php: |
       <?php
-      $hostname = $_SERVER['HTTP_HOST'];
+      $hostname = $_SERVER['HTTP_HOST'] ?? 'localhost';
       $CONFIG = array (
         'trusted_domains' => 
         array (
@@ -47,7 +47,6 @@ nextcloud:
         ),
         'forwarded_for_headers' => ['HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED'],
       );
-
 
 nginx:
   enabled: true
@@ -125,7 +124,7 @@ persistence:
   enabled: true
   storageClass: "nextcloud"
   accessMode: ReadWriteMany
-  size: 100Gi
+  size: 64Gi
   nextcloudData:
     enabled: false
 
