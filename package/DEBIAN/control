@@ -3,6 +3,6 @@ Version: 1.1.0
 Architecture: all
 Essential: no
 Priority: optional
-Depends: bh-utils
+Depends: bh-utils, ucf
 Maintainer: kr1sal
 Description: Nextcloud Deploy in docker

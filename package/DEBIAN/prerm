@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+export PATH=$PATH:/usr/local/bin
+
+# TEMPLATE="/usr/share/<package>/config.yaml.example"
+# TARGET="/etc/<package>/config.yaml"
+# STATE="/var/lib/<package>/config.yaml.example"
+
+# install -D -m 644 "$TEMPLATE" "$STATE"
+
+# [ ! -f "$TARGET" ] && cp "$TEMPLATE" "$TARGET"
+
+mkdir -p /var/lib/nextcloud
+for FILE_EXAMPLE in /usr/share/nextcloud/*.example; do
+    FILE=$(basename "$FILE_EXAMPLE" .example)
+    # cp "$FILE_EXAMPLE" "/var/lib/nextcloud/$FILE"
+    install -D -m 644 "$FILE_EXAMPLE" "/var/lib/nextcloud/$FILE"
+    if [ ! -f "/etc/nextcloud/$FILE" ]; then
+        cp "$FILE_EXAMPLE" "/etc/nextcloud/$FILE"
+    fi
+done

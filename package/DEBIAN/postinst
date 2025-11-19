@@ -3,6 +3,16 @@ set -e
 
 export PATH=$PATH:/usr/local/bin
 
+mkdir -p /etc/nextcloud
+for FILE_EXAMPLE in /usr/share/nextcloud/*.example; do
+    FILE=$(basename "$FILE_EXAMPLE" .example)
+    if [ ! -f "/etc/nextcloud/$FILE" ]; then
+        cp "$FILE_EXAMPLE" "/etc/nextcloud/$FILE"
+    else
+        ucf --three-way "$FILE_EXAMPLE" /etc/nextcloud/${FILE}
+    fi
+done
+
 echo
 echo "For quick setup just launch:"
 echo "	bash /usr/local/nextcloud/deploy.sh"
