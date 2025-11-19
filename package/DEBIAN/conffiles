@@ -1,0 +1,4 @@
+/etc/nextcloud/.env
+/etc/nextcloud/compose.yaml
+/etc/nextcloud/dynamic.yml
+/etc/nextcloud/traefik.yml
